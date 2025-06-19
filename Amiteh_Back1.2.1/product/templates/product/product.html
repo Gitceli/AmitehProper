@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto flex flex-wrap py-6 px-6 xl:px-0">
+
+    <!-- Product Image and Information -->
+    <div class="w-full lg:w-3/5 mb-6 lg:mb-0">
+        <img class="rounded-xl" src="{{ product.image.url }}" alt="{{ product.name }}">
+    </div>
+    <div class="w-full lg:w-2/5 lg:p-6">
+        <h1 class="text-2xl font-bold">{{ product.name }}</h1>
+        <p class="mt-1 text-gray-400">${{ product.price }}</p>
+        <p class="mt-6 mb-6 text-gray-700">{{ product.description }}</p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="w-full mt-6">
+        <h2 class="text-xl mb-4">Filter Similar Products</h2>
+        <form method="get" action="">
+            <select name="category" class="block w-full mb-4">
+                <option value="">Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category.id == selected_category %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="make" class="block w-full mb-4">
+                <option value="">Select Make</option>
+                {% for make in makes %}
+                    <option value="{{ make.id }}" {% if make.id == selected_make %}selected{% endif %}>{{ make.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="area" class="block w-full mb-4">
+                <option value="">Select Area</option>
+                {% for area in areas %}
+                    <option value="{{ area.id }}" {% if area.id == selected_area %}selected{% endif %}>{{ area.name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded">Filter</button>
+        </form>
+    </div>
+
+    <!-- Similar Products Section -->
+    <div class="w-full mt-6">
+        <h2 class="text-xl mb-4">Similar Products</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for similar_product in similar_products %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <a href="{% url 'product' similar_product.slug %}">
+                        <img src="{% if similar_product.image %}{{ similar_product.image.url }}{% else %}https://via.placeholder.com/150x150.jpg{% endif %}" alt="{{ similar_product.name }}" class="w-full h-32 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold">{{ similar_product.name }}</h3>
+                            <p class="text-gray-500">${{ similar_product.price }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

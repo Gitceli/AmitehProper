@@ -1,0 +1,28 @@
+# Switch to postgres user
+sudo -i -u postgres
+
+# Access PostgreSQL command line
+psql
+
+# Inside PostgreSQL prompt, create a database for your application
+CREATE DATABASE nordichomes;
+
+# Create a user (replace 'postcheli' and 'yourpassword'*(postpass) with your preferred values)
+CREATE USER postcheli WITH PASSWORD 'postpass';
+
+# Grant privileges to the user on the database
+ALTER ROLE postcheli SET client_encoding TO 'utf8';
+ALTER ROLE postcheli SET default_transaction_isolation TO 'read committed';
+ALTER ROLE postcheli SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE nordichomes TO postcheli;
+
+# Exit PostgreSQL prompt
+\q
+
+# Exit postgres user
+exit
+
+
+
+
+CREATE DATABASE AmiPG;
