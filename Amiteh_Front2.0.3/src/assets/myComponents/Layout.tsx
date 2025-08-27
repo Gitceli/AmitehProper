@@ -6,7 +6,6 @@ import Footer from '@/assets/myComponents/Footer';
 export default function Layout() {
   return (
     <div className="flex flex-col min-h-screen">
-      <NavMenu />
       {/* Removed absolute positioning and used flex-grow */}
       <main className="flex-grow electronic-pattern overflow-y-auto relative">
         <Outlet />

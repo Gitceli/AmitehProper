@@ -25,7 +25,7 @@ const AppRouter = () => {
             <Route path="Proizvajalci" element={<Proizvajalci />} />
             <Route path="Proizvajalci/:name" element={<ProizvajalciDetail />} />
             <Route path="Podrocja/:name" element={<PodrocjaDetail />} />
-            <Route path="Kategorije/:name" element={<KategorijeDetail />} />
+            <Route path="Izdelki/:name" element={<KategorijeDetail />} />
             <Route path="Produkt/:name" element={<ProductDetail />} /> 
             <Route path="*" element={<NotFound />} />
           </Route>

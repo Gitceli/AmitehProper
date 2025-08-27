@@ -1,6 +1,14 @@
 from rest_framework import serializers
-from .models import Category, Make, Area, Product, Review, Discount, StockStatus
-
+from .models import (
+    Category,
+    Make,
+    Area,
+    Product,
+    Discount,
+    StockStatus,
+    SeoMeta,
+    RobotsRule,
+)
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,6 +26,11 @@ class CategorySerializer(serializers.ModelSerializer):
             "parameter5",
             "parameter6",
             "parameter7",
+            "meta_title",
+            "meta_description",
+            "og_image",
+            "canonical_url",
+            "noindex",
         ]
 
 
@@ -33,13 +46,18 @@ class MakeSerializer(serializers.ModelSerializer):
             "description",
             "podnaslov",
             "description2",
+            "meta_title",
+            "meta_description",
+            "og_image",
+            "canonical_url",
+            "noindex",
         ]
 
 
 class AreaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Area
-        fields = ["id", "name", "slug", "image", "description"]
+        fields = ["id", "name", "slug", "image", "description", "meta_title", "meta_description"]
 
 
 class DiscountSerializer(serializers.ModelSerializer):
@@ -54,67 +72,74 @@ class StockStatusSerializer(serializers.ModelSerializer):
         fields = ["id", "in_stock"]
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()  # Nested serializer for category details
-    parameter1_value = serializers.SerializerMethodField()
-    parameter2_value = serializers.SerializerMethodField()
-    parameter3_value = serializers.SerializerMethodField()
-    parameter4_value = serializers.SerializerMethodField()
-    parameter5_value = serializers.SerializerMethodField()
-    parameter6_value = serializers.SerializerMethodField()
-    parameter7_value = serializers.SerializerMethodField()
-
+class MakeLiteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Product
+        model = Make
+        fields = ["id", "name", "slug"]
+
+
+class CategoryLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
         fields = [
             "id",
             "name",
-            "price",
-            "category",  # Includes all category data
-            "make",
-            "area",
-            "name",
             "slug",
-            "description",
-            "price",
-            "created_at",
-            "image",
-            "thumbnail",
-            "posebnosti",
-            "parameter1_value",
-            "parameter2_value",
-            "parameter3_value",
-            "parameter4_value",
-            "parameter5_value",
-            "parameter6_value",
-            "parameter7_value",
-            "discount",
-            "stock_status",
+            "parameter1",
+            "parameter2",
+            "parameter3",
+            "parameter4",
+            "parameter5",
+            "parameter6",
+            "parameter7",
         ]
 
-    def get_parameter1_value(self, obj):
-        return obj.parameter1
 
-    def get_parameter2_value(self, obj):
-        return obj.parameter2
+class ProductSerializer(serializers.ModelSerializer):
+    make = MakeLiteSerializer()
+    category = CategoryLiteSerializer()
+    in_stock = serializers.SerializerMethodField()
+    discount_percent = serializers.SerializerMethodField()
 
-    def get_parameter3_value(self, obj):
-        return obj.parameter3
-
-    def get_parameter4_value(self, obj):
-        return obj.parameter4
-
-    def get_parameter5_value(self, obj):
-        return obj.parameter5
-
-    def get_parameter6_value(self, obj):
-        return obj.parameter6
-
-    def get_parameter7_value(self, obj):
-        return obj.parameter7
-
-
-class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Review
-        fields = ["id", "product", "rating", "content", "created_by", "created_at"]
+        model = Product
+        fields = "__all__"
+
+    def get_in_stock(self, obj):
+        return obj.in_stock
+
+    def get_discount_percent(self, obj):
+        return float(obj.discount.discount) if obj.discount and obj.discount.discount is not None else None
+
+
+# --- SEO serializers ---
+
+class SeoMetaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SeoMeta
+        fields = [
+            "id",
+            "path",
+            "meta_title",
+            "meta_description",
+            "og_image",
+            "canonical_url",
+            "noindex",
+            "extra",
+            "updated_at",
+        ]
+
+
+class RobotsRuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RobotsRule
+        fields = [
+            "id",
+            "user_agent",
+            "disallow",
+            "allow",
+            "sitemap_url",
+            "crawl_delay",
+            "is_active",
+            "order",
+        ]

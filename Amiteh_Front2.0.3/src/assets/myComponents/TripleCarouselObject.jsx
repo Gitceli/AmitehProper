@@ -28,9 +28,9 @@ const CardCarousel = ({ title, slides, autoRotateDelay }) => {
   };
 
   return (
-    <div className="relative rounded-lg overflow-hidden shadow-lg">
+    <div className="relative bg-transparent rounded-lg overflow-hidden shadow-lg">
       {/* Card Title */}
-      <h3 className="text-xl font-bold pb-4 text-white relative bg-black">{title}</h3>
+      <h3 className="text-xl font-bold pb-4 text-white relative ">{title}</h3>
       
       {/* Card Carousel */}
       <div className="relative h-64">
@@ -106,7 +106,15 @@ const CardCarousel = ({ title, slides, autoRotateDelay }) => {
 const TripleCarouselObject = () => {
   const [isMobile, setIsMobile] = useState(false);
   const { cardsData, loading, error, retry } = useFetchHomepage();
-  
+  const count = cardsData.length;
+
+  // build the right width class for non-mobile
+  const widthClass = isMobile
+    ? 'w-full'
+    : count >= 2 && count <= 12
+    ? `w-1/${count}`
+    : 'flex-1';
+
   // Check screen size on mount and when window resizes
   useEffect(() => {
     const checkScreenSize = () => {
@@ -146,12 +154,12 @@ const TripleCarouselObject = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4">
+    <div className="flex flex-col items-center flex flex-wrap gap-6 justify-center min-h-screen bg-gray-300 p-4">
       <div className="w-full max-w-6xl">
-        <h2 className="text-2xl font-bold mb-6 text-white text-center">Technologies Showcase</h2>
-        <div className={`flex ${isMobile ? 'flex-col gap-8' : 'flex-row gap-4'}`}>
+        <h2 className="text-2xl font-bold mb-10 text-gray text-center">Naslov</h2>
+        <div className={` bg-gray-900   flex ${isMobile ? 'flex-col gap-8' : 'flex-row gap-4'}`}>
           {cardsData.map((card, index) => (
-            <div key={card.id} className={`${isMobile ? 'w-full' : 'w-1/3'}`}>
+            <div key={card.id} className={widthClass}>
               <CardCarousel 
                 title={card.title} 
                 slides={card.slides} 

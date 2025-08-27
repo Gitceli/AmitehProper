@@ -1,14 +1,12 @@
-// apiConfig.js
+// assets/myComponents/hooks/apiConfig.js
 const getApiBaseUrl = () => {
-    // Check if we're in production (deployed to ivancic.in)
-    const isProduction = window.location.hostname === 'ivancic.in' || 
-                         window.location.hostname === 'www.ivancic.in';
-    
-    // Return appropriate base URL
-    return isProduction 
-      ? '/api' 
-      : 'http://localhost:8000/api'
+  // Treat anything that is NOT localhost/127.* as production
+  const localHosts = ['localhost', '127.0.0.1'];
+  const isLocal    = localHosts.includes(window.location.hostname);
 
-  };
-  
-  export default getApiBaseUrl;
+  return isLocal
+    ? 'http://localhost:8000/api'   // dev: Django runs on :8000
+    : '/api';                       // prod: nginx proxies /api → gunicorn
+};
+
+export default getApiBaseUrl;

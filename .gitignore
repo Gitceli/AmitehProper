@@ -1,0 +1,22 @@
+# Python
+*.pyc
+__pycache__/
+env/
+*.sqlite3
+
+# Django static/media
+/staticfiles/
+/media/
+
+# Node/Vite
+node_modules/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+*Zone.Identifier
+
+# Env
+.env

@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/navigation-menu';
 
 const NavBar = (props) => {
-  const { title, navItems } = props;
+  const { title, slug, navItems } = props;
 
   return (
     <NavigationMenu className="ml-5">
@@ -37,7 +37,7 @@ const NavBar = (props) => {
           {navItems && navItems.length > 0 ? (
             navItems.map((item, index) => (
               <DropdownMenuItem key={index}>
-                <Link to={`/${title}/${item}`}>
+                <Link to={`/${slug}/${item}`}>
                   {item}
                 </Link>
               </DropdownMenuItem>

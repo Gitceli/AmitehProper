@@ -1,15 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.viewsets import ModelViewSet
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from rest_framework import viewsets
 
-from .models import Category, Make, Area, Product, Review, Discount, StockStatus
+from .models import Category, Make, Area, Product,  Discount, StockStatus
 from .serializers import (
     CategorySerializer,
     MakeSerializer,
     AreaSerializer,
     ProductSerializer,
-    ReviewSerializer,
     DiscountSerializer,
     StockStatusSerializer,
 )
@@ -50,10 +53,21 @@ def similar_products_api(request, slug):
     return JsonResponse(similar_data)
 
 
-class ReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.select_related("category", "make").all()
+    serializer_class = ProductSerializer
+    lookup_field = "slug"  # enables /api/product/products/<slug>/
 
+    @action(detail=False, url_path=r"related-by-category/(?P<category_id>\d+)")
+    def related_by_category(self, request, category_id=None):
+        qs = self.get_queryset().filter(category_id=category_id)[:24]
+        return Response(self.get_serializer(qs, many=True).data)
+
+    @action(detail=False, url_path=r"related-by-make/(?P<make_id>\d+)")
+    def related_by_make(self, request, make_id=None):
+        qs = self.get_queryset().filter(make_id=make_id)[:24]
+        return Response(self.get_serializer(qs, many=True).data)
+    
 
 class DiscountViewSet(viewsets.ModelViewSet):
     queryset = Discount.objects.all()
@@ -86,39 +100,14 @@ class ProductPagination(PageNumberPagination):
     max_page_size = 100
 
 
-# ViewSets for different models
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
 
 
 def product(request, slug):
     # Get the product based on the slug
     product = get_object_or_404(Product, slug=slug)
 
-    # Handle POST request for reviews
-    if request.method == "POST":
-        rating = request.POST.get("rating", 3)
-        content = request.POST.get("content", "")
-
-        # Check if the user has already reviewed this product
-        if content:
-            reviews = Review.objects.filter(created_by=request.user, product=product)
-            if reviews.exists():
-                # Update the existing review
-                review = reviews.first()
-                review.rating = rating
-                review.content = content
-                review.save()
-            else:
-                # Create a new review
-                Review.objects.create(
-                    product=product,
-                    rating=rating,
-                    content=content,
-                    created_by=request.user,
-                )
-            return redirect("product", slug=slug)
+    
+    
 
     # Similar products filtering based on category, make, and area
     similar_products = Product.objects.filter(category=product.category).exclude(

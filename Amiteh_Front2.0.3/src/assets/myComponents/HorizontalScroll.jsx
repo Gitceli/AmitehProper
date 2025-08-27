@@ -12,11 +12,11 @@ const MeasurementScrollAnimation = () => {
   
   // Circuit component definition - positioning along the horizontal path
   const circuitPoints = [
-    { id: 'input', position: 10, label: 'Input', color: '#60A5FA', description: 'High-impedance input with protection circuitry' },
-    { id: 'filter', position: 25, label: 'Filter', color: '#60A5FA', description: 'Precision bandpass filter' },
+    { id: 'input', position: 10, label: 'Input', color: '#cbe0faff', description: 'High-impedance input with protection circuitry' },
+    { id: 'filter', position: 25, label: 'Filter', color: '#8cbcf7ff', description: 'Precision bandpass filter' },
     { id: 'amp', position: 40, label: 'Amp', color: '#34D399', description: 'Low-noise differential amplifier stage' },
     { id: 'processor', position: 60, label: 'Processor', color: '#F59E0B', description: 'Digital signal processing unit' },
-    { id: 'buffer', position: 75, label: 'Buffer', color: '#6B7280', description: 'Output buffer with impedance matching' },
+    { id: 'buffer', position: 75, label: 'Buffer', color: '#898a80ff', description: 'Output buffer with impedance matching' },
     { id: 'output', position: 90, label: 'Output', color: '#6B7280', description: 'High-precision measurement output' }
   ];
 
@@ -73,8 +73,8 @@ const MeasurementScrollAnimation = () => {
       const x = (i / segments) * 100;
       const phase = offset + scrollProgress * 10;
       const y = 50 + Math.sin((x * frequency) + phase) * amplitude;
-      points.push(`${x}% ${y}%`);
-    }
+      points.push(`${x} ${y}`)
+      }
     
     return points.length > 0 ? `M ${points.join(' L ')}` : 'M 0 50 L 0 50';
   };
@@ -110,7 +110,7 @@ const MeasurementScrollAnimation = () => {
       
       {/* Horizontal scrolling section */}
       <div className={`fixed inset-0 flex items-center justify-center transition-opacity duration-500 
-                       ${isHorizontalActive ? 'opacity-100 z-20' : 'opacity-0 -z-10'}`}>
+                       ${isHorizontalActive ? 'opacity-100 z-60' : 'opacity-0 -z-10'}`}>
         {/* Oscilloscope grid background */}
         <div className="absolute inset-0 grid grid-cols-12 grid-rows-12 opacity-10 pointer-events-none">
           {Array.from({ length: 13 }).map((_, i) => (
@@ -184,7 +184,7 @@ const MeasurementScrollAnimation = () => {
             // Get the arrow position based on popup position
             const getArrowPosition = (pointIndex) => {
               if (pointIndex < 3) {
-                return { left: "-6px", borderTop: "1px solid", borderLeft: "1px solid", right: "auto" };
+                return { left: "-6px",  borderLeft: "1px solid", right: "auto" };
               } else {
                 return { right: "-6px", borderTop: "1px solid", borderRight: "1px solid", left: "auto" };
               }
@@ -267,11 +267,11 @@ const MeasurementScrollAnimation = () => {
             }}
           >
             {/* Oscilloscope probe */}
-            <div className="w-8 h-16 mb-2 bg-blue-600 rounded-t-full relative overflow-hidden">
+            <div className="w-8 h-14 mb-2 bg-blue-600 rounded-t-full relative overflow-hidden">
               <div className="absolute w-6 h-6 bg-blue-300 rounded-full top-2 left-1 animate-pulse"></div>
             </div>
             <div className="w-3 h-24 bg-gradient-to-b from-blue-600 via-blue-500 to-blue-600"></div>
-            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-xl">
+            <div className="w-10 h-9 bg-blue-600 rounded-full flex items-center justify-center shadow-xl">
               <div className="w-8 h-8 bg-blue-400 rounded-full animate-ping absolute opacity-50"></div>
               <div className="w-6 h-6 bg-blue-300 rounded-full"></div>
             </div>

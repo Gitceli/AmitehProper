@@ -81,10 +81,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-    "https://ivancic.in",
-    "https://www.ivancic.in",
     "http://localhost:8000",
-    "http://localhost:3000",
+    "http://91.208.125.150",
+    "http://10.232.40.10",   # <-- add this
+
 
 ]
 
@@ -163,7 +163,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "Europe/Belgrade"
+TIME_ZONE = "Europe/Ljubljana"
 USE_I18N = True
 USE_TZ = True
 
